@@ -17,13 +17,15 @@ jobs:
     needs: [create_release_branch]
     runs-on: ubuntu-latest
     steps:
-      - name: Docker Auth
-        run: docker login --username oauth --password ${{ secrets.YANDEX_AUTH }} cr.yandex
+      - name: Yandex Cloud CR "Login" Action for GitHub Actions
+        uses: yc-actions/yc-cr-login@v0.1-alpha
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
       - name: Create Docker image
-        run: docker image build -t cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ github.run_number }} .
-      - name: Pull Docker image
-        run: docker pull cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ github.run_number }}
+        run: |
+          docker image build -t cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ github.run_number }} .
+          docker pull cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ github.run_number }}
       - name: Create Docker image current
-        run: docker image build -t cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ github.run_number }}_latest .
-      - name:  Pull Docker image current
-        run: docker pull cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ github.run_number }}_latest
+        run: |
+          docker image build -t cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ github.run_number }}_latest .
+          docker pull cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ github.run_number }}_latest
