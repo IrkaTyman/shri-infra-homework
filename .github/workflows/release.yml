@@ -43,7 +43,7 @@ jobs:
         run: docker build -t cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ github.run_number }} .
 
       - run: sudo usermod -a -G docker $USER
-      -
+
       - name: Pull Docker file
         run: docker push cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ github.run_number }}
 
