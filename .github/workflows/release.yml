@@ -35,8 +35,7 @@ jobs:
 
       - name: Yandex Cloud CR "Login" Action for GitHub Actions
         uses: yc-actions/yc-cr-login@v0.1-alpha
-        with:
-          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+        run: docker login --username json_key --password ${{ secrets.YC_SA_JSON_CREDENTIALS }} cr.yandex
 
       - name: Create Docker image
         run: docker build -t cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ github.run_number }} .
