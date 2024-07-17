@@ -4,20 +4,22 @@ jobs:
   init:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-      - run: npm ci
+
 
   lint:
     runs-on: ubuntu-latest
     needs: [init]
     steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
       - run: npm run lint
 
   test:
     runs-on: ubuntu-latest
     needs: [ init ]
     steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
       - run: npm run test
 
   create_release_branch:
@@ -25,7 +27,7 @@ jobs:
     needs: [init]
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Create release branch
         run: git checkout -b release/${{ github.run_number }}
       - name: Push new branch
@@ -40,10 +42,14 @@ jobs:
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
 
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+
       - name: Create Docker image
-        run: |
-          docker image build -t cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ github.run_number }} .
-          docker pull cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ github.run_number }}
+        run: docker image build -t cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ github.run_number }} .
+
+      - name: Pull Docker file
+        run: docker pull cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ github.run_number }}
 
       - name: Create Docker image current
         run: |
