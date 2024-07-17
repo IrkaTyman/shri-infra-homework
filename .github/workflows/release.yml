@@ -36,15 +36,12 @@ jobs:
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
 
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - run: yc container registry configure-docker
 
       - name: Create Docker image
         run: docker build -t cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ github.run_number }} .
 
-      - run: sudo usermod -a -G docker $USER
-
-      - name: Pull Docker file
+      - name: Push Docker file
         run: docker push cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ github.run_number }}
 
       - name: Create Docker image current
