@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Docker Auth
-        run: echo ${{ github.YANDEX_AUTH }} | docker login --username oauth --password-stdin cr.yandex
+        run: docker login --username oauth --password ${{ github.YANDEX_AUTH }} cr.yandex
       - name: Create Docker image
         run: docker image build -t cr.yandex/${{github.YC_REGISTRY_ID}}/app:${{ github.run_number }} .
       - name: Pull Docker image
