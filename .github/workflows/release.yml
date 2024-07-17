@@ -20,7 +20,6 @@ jobs:
   create_release:
     needs: [lint, test]
     runs-on: ubuntu-latest
-    needs: [lint, test]
     steps:
       - name: Check out code
         uses: actions/checkout@v2
