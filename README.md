@@ -51,11 +51,11 @@ https://yandex.cloud/ru/docs/compute/quickstart/quick-create-linux#create-vm
 
 2. ❌ Флоу создания релиза, который запускается вручную (`on: [workflow_dispatch]`):
 
-    - ❌ запускает параллельно линтер и тесты
+    - ✔️ запускает параллельно линтер и тесты
 
-    - ❌ здесь и дальше версией релиза будет считаться номер запуска флоу `${{ github.run_number }}`
+    - ✔️ здесь и дальше версией релиза будет считаться номер запуска флоу `${{ github.run_number }}`
 
-    - ❌ отводит от `main` релизуню ветку `releases/<версия_релиза>`
+    - ✔️ отводит от `main` релизуню ветку `releases/<версия_релиза>`
 
     - ❌ [собирает docker-образ](shttps://yandex.cloud/ru/docs/container-registry/operations/docker-image/docker-image-create) с двумя тегами тегами:
         - `cr.yandex/<идентификатор_реестра>/app:<версия_релиза>`
