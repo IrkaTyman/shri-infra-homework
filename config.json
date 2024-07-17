@@ -1,0 +1,20 @@
+{
+  "credHelpers": {
+    "container-registry.cloud.yandex.net": "yc",
+    "cr.cloud.yandex.net": "yc",
+    "cr.yandex": "yc"
+  },
+  "credsStore": "desktop",
+  "currentContext": "desktop-linux",
+  "features": {
+    "hooks": "true"
+  },
+  "plugins": {
+    "debug": {
+      "hooks": "exec"
+    },
+    "scout": {
+      "hooks": "pull,buildx build"
+    }
+  }
+}
