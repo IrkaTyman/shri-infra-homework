@@ -18,12 +18,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Docker Auth
-        run: docker login --username oauth --password ${{ github.YANDEX_AUTH }} cr.yandex
+        run: docker login --username oauth --password ${{ secrets.YANDEX_AUTH }} cr.yandex
       - name: Create Docker image
-        run: docker image build -t cr.yandex/${{github.YC_REGISTRY_ID}}/app:${{ github.run_number }} .
+        run: docker image build -t cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ github.run_number }} .
       - name: Pull Docker image
-        run: docker pull cr.yandex/${{github.YC_REGISTRY_ID}}/app:${{ github.run_number }}
+        run: docker pull cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ github.run_number }}
       - name: Create Docker image current
-        run: docker image build -t cr.yandex/${{github.YC_REGISTRY_ID}}/app:${{ github.run_number }}_latest .
+        run: docker image build -t cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ github.run_number }}_latest .
       - name:  Pull Docker image current
-        run: docker pull cr.yandex/${{github.YC_REGISTRY_ID}}/app:${{ github.run_number }}_latest
+        run: docker pull cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ github.run_number }}_latest
