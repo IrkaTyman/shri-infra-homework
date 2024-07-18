@@ -6,9 +6,18 @@ on:
         type: string
         required: true
         description: "Version to release"
+      host:
+        type: string
+        required: true
+        description: "Host"
+      name:
+        type: string
+        required: true
+        description: "Name"
 
 jobs:
   run_docker:
+    needs: [check_docker]
     runs-on: ubuntu-latest
     steps:
       - name: Yandex Cloud CR "Login" Action for GitHub Actions
@@ -16,17 +25,17 @@ jobs:
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
 
-      - name: Deploy COI VM
-        id: deploy-coi
-        uses: yc-actions/yc-coi-deploy@v2
-        env:
-          CR_REGISTRY: ${{secrets.YC_REGISTRY_ID}}
-          CR_REPOSITORY: crp2i96436f2665d759c/app
-          IMAGE_TAG: cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_latest
+      - name: SSH and deploy to prod
+        uses: appleboy/ssh-action@master
         with:
-          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-          folder-id: b1glfd63reoaohe1mnsd
-          vm-name: irkatyman
+          host: ${{ inputs.host }}
+          username: ${{ inputs.name }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          scripts: |
+            docker pull cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_latest
+            docker run cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_latest
+          
 
   add_issue_comment:
     needs: [run_docker]
