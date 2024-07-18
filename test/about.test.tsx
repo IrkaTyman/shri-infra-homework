@@ -6,6 +6,6 @@ describe('About', () => {
     it('Should render author name', () => {
         const { container } = render(<About />);
 
-        expect(container.textContent).toBe('About With Fix In Release 39Author: Туманова Ирина');
+        expect(container.textContent).toBe('About With Fix In Release 39_fixAuthor: Туманова Ирина');
     });
 });
