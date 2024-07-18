@@ -1,0 +1,77 @@
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        required: true
+        description: "Version to release"
+      issue-number:
+        type: number
+        required: true
+        description: "Issue number id"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: releases/${{github.run_number}}
+      - uses: actions/setup-node@v3
+      - run: npm ci
+      - run: npm run lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: releases/${{github.run_number}}
+      - uses: actions/setup-node@v3
+      - run: npm ci
+      - run: npm run test
+
+  create_release_hotfix_docker:
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: releases/${{github.run_number}}
+
+      - name: Yandex Cloud CR "Login" Action for GitHub Actions
+        uses: yc-actions/yc-cr-login@v2
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+
+      - name: Create Docker image Fix
+        run: |
+          docker build -t cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_fix${{ github.run_number }} .
+          docker push cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_fix${{ github.run_number }}
+
+      - name: Create Docker image Latest
+        run: |
+          docker image build -t cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_latest .
+          docker push cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_latest
+
+      - name: Push tag
+        uses: EndBug/latest-tag@latest
+        with:
+          tag-name: ${{ inputs.version }}_fix${{ github.run_number }}
+
+      - name: Set current date as env variable
+        run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+
+      - name: Append Issue Body
+        uses: julien-deramond/update-issue-body@v1
+        with:
+          issue-number: ${{ inputs.issue-number }}
+          body: |
+            **Fix**:
+            - Date: $NOW
+            - Author: ${{ github.triggering_actor }}
+            - Version: ${{ github.run_number }}
+            - Commits:
+            - YC Docker: cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_fix${{ github.run_number }}
+          edit-mode: append
+          append-separator: space
