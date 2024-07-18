@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: releases/${{github.run_number}}
+          ref: release/${{inputs.version}}
       - uses: actions/setup-node@v3
       - run: npm ci
       - run: npm run lint
@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: releases/${{github.run_number}}
+          ref: release/${{inputs.version}}
       - uses: actions/setup-node@v3
       - run: npm ci
       - run: npm run test
@@ -39,7 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: releases/${{github.run_number}}
+          ref: release/${{inputs.version}}
 
       - name: Yandex Cloud CR "Login" Action for GitHub Actions
         uses: yc-actions/yc-cr-login@v2
@@ -56,13 +56,27 @@ jobs:
           docker image build -t cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_latest .
           docker push cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_latest
 
+  create_tag:
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: release/${{inputs.version}}
+
       - name: Push tag
         uses: EndBug/latest-tag@latest
         with:
           tag-name: ${{ inputs.version }}_fix${{ github.run_number }}
 
-      - name: Set current date as env variable
-        run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+  edit_issue:
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Put current date into a variable
+        run: |
+          $NOW=& Get-Date -format yyyy-MM-dd
+          echo "NOW=$NOW" >> $env:GITHUB_ENV
 
       - name: Append Issue Body
         uses: julien-deramond/update-issue-body@v1
@@ -70,7 +84,7 @@ jobs:
           issue-number: ${{ inputs.issue-number }}
           body: |
             **Fix**:
-            - Date: $NOW
+            - Date: ${{env.NOW}}
             - Author: ${{ github.triggering_actor }}
             - Version: ${{ github.run_number }}
             - Commits:
