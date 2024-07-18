@@ -6,14 +6,6 @@ on:
         type: string
         required: true
         description: "Version to release"
-      host:
-        type: string
-        required: true
-        description: "Host"
-      name:
-        type: string
-        required: true
-        description: "Name"
 
 jobs:
   run_docker:
@@ -27,8 +19,8 @@ jobs:
       - name: SSH and deploy to prod
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ inputs.host }}
-          username: ${{ inputs.name }}
+          host: ${{ secrets.SHH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           scripts: |
