@@ -49,7 +49,7 @@ https://yandex.cloud/ru/docs/compute/quickstart/quick-create-linux#create-vm
 
     - ✔️ нужно настроить ограничение на мердж изменений, если проверки не прошли
 
-2. ❌ Флоу создания релиза, который запускается вручную (`on: [workflow_dispatch]`):
+2. ✔️ Флоу создания релиза, который запускается вручную (`on: [workflow_dispatch]`):
 
     - ✔️ запускает параллельно линтер и тесты
 
@@ -96,15 +96,15 @@ https://yandex.cloud/ru/docs/compute/quickstart/quick-create-linux#create-vm
         - ссылку на docker-образом в Yandex Container Registry\
           `cr.yandex/<идентификатор_реестра>/app:<версия_релиза>_fix<номер_запуска_фиксрелизного_флоу>`
 
-4. ❌ Флоу выкатки релиза в прод
+4. ✔️ Флоу выкатки релиза в прод
 
     - ✔️ принимает на вход версию релиза
 
-    - ❌ проверяет, что существует образ в Container Registry с тегом `<версия_релиза>_latest`
+    - ✔️ проверяет, что существует образ в Container Registry с тегом `<версия_релиза>_latest`
 
-    - ❌ [по ssh запускает Docker-образ на виртуальной машине](https://yandex.cloud/ru/docs/container-registry/tutorials/run-docker-on-vm/console#run)
+    - ✔️ [по ssh запускает Docker-образ на виртуальной машине](https://yandex.cloud/ru/docs/container-registry/tutorials/run-docker-on-vm/console#run)
 
-    - ❌ в Issue добавьте комментарий о том, что релиз выкачен в прод c датой и человеком, который запустил выкатку в прод
+    - ✔️ в Issue добавьте комментарий о том, что релиз выкачен в прод c датой и человеком, который запустил выкатку в прод
 
 ## Полезные ссылки
 
