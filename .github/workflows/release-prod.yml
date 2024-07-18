@@ -17,7 +17,6 @@ on:
 
 jobs:
   run_docker:
-    needs: [check_docker]
     runs-on: ubuntu-latest
     steps:
       - name: Yandex Cloud CR "Login" Action for GitHub Actions
