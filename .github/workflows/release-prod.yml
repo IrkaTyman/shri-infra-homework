@@ -6,6 +6,10 @@ on:
         type: string
         required: true
         description: "Version to release"
+      issue-number:
+        type: number
+        required: true
+        description: "Release Issue number id"
 
 jobs:
   run_docker:
