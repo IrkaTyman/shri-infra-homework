@@ -1,0 +1,37 @@
+name: Release Production
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        required: true
+        description: "Version to release"
+
+jobs:
+  check_docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Yandex Cloud CR "Login" Action for GitHub Actions
+        uses: yc-actions/yc-cr-login@v2
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+      - run: docker search cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_latest
+
+  run_docker:
+    needs: [check_docker]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: release/${{github.run_number}}
+
+      - name: Yandex Cloud CR "Login" Action for GitHub Actions
+        uses: yc-actions/yc-cr-login@v2
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+
+      - name: Run
+        run: |
+          ssh irkatyman@158.160.128.234
+          docker pull cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_latest
+          docker run cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_latest
