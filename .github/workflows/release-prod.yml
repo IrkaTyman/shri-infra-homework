@@ -35,3 +35,19 @@ jobs:
           ssh irkatyman@158.160.128.234
           docker pull cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_latest
           docker run cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_latest
+
+  add_issue_comment:
+    needs: [run_docker]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Put current date into a variable
+        run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{inputs.issue-number}}
+          body: |
+            **Prod**:
+            - Date: ${{env.NOW}}
+            - Author: ${{ github.triggering_actor }}
