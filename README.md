@@ -57,19 +57,19 @@ https://yandex.cloud/ru/docs/compute/quickstart/quick-create-linux#create-vm
 
     - ✔️ отводит от `main` релизуню ветку `releases/<версия_релиза>`
 
-    - ❌ [собирает docker-образ](shttps://yandex.cloud/ru/docs/container-registry/operations/docker-image/docker-image-create) с двумя тегами тегами:
+    - ✔️ [собирает docker-образ](shttps://yandex.cloud/ru/docs/container-registry/operations/docker-image/docker-image-create) с двумя тегами тегами:
         - `cr.yandex/<идентификатор_реестра>/app:<версия_релиза>`
         - `cr.yandex/<идентификатор_реестра>/app:<версия_релиза>_latest`
     
-    - ❌ загружает docker-образ в Container Registry (необходимо, чтобы реджистри отображались оба тега)
+    - ✔️ загружает docker-образ в Container Registry (необходимо, чтобы реджистри отображались оба тега)
 
-    - ❌ создаёт тег, с номером текущей версии, который указывает на последний коммит в главной ветке
+    - ✔️ создаёт тег, с номером текущей версии, который указывает на последний коммит в главной ветке
 
-    - ❌ создаёт Issue в GitHub, которое содержит всю важную информацию:
+    - ✔️ создаёт Issue в GitHub, которое содержит всю важную информацию:
         - дату,
         - автора релиза (тот, кто запустил флоу),
         - номер версии (`${{ github.run_number }}`),
-        - список коммитов от предыдущего релизного (или фиксрелизного) тега,
+        - ❌ список коммитов от предыдущего релизного (или фиксрелизного) тега,
         - ссылку на docker-образом в Yandex Container Registry\
           `cr.yandex/<идентификатор_реестра>/app:<версия_релиза>`
 
