@@ -1,3 +1,5 @@
+name: Release ${{ github.run_number }} Hotfix
+
 on:
   workflow_dispatch:
     inputs:
