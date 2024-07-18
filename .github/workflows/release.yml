@@ -66,6 +66,7 @@ jobs:
 
   create_issue:
     runs-on: ubuntu-latest
+    needs: [lint, test]
     steps:
       - name: Set current date as env variable
         run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV

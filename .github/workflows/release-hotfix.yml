@@ -69,17 +69,17 @@ jobs:
         with:
           tag-name: ${{ inputs.version }}_fix${{ github.run_number }}
 
-  edit_issue:
+  add_issue_comment:
     needs: [lint, test]
     runs-on: ubuntu-latest
     steps:
       - name: Put current date into a variable
         run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
 
-      - name: Append Issue Body
-        uses: julien-deramond/update-issue-body@v1
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v4
         with:
-          issue-number: ${{ inputs.issue-number }}
+          issue-number: ${{inputs.issue-number}}
           body: |
             **Fix**:
             - Date: ${{env.NOW}}
@@ -87,5 +87,3 @@ jobs:
             - Version: ${{ github.run_number }}
             - Commits:
             - YC Docker: cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_fix${{ github.run_number }}
-          edit-mode: append
-          append-separator: space
