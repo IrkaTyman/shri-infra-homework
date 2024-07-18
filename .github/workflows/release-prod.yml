@@ -16,7 +16,7 @@ jobs:
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
       - run: |
-          ssh -tt irkatyman@158.160.128.234 
+          ssh -tt irkatyman-sa@158.160.128.234 
           docker inspect --type=image cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_latest
 
   run_docker:
