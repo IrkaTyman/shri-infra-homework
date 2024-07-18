@@ -17,7 +17,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          scripts: |
+          script: |
             echo ${{ secrets.YC_SA_JSON_CREDENTIALS }} | docker login --username json_key --password-stdin cr.yandex
             
             docker pull cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_latest
