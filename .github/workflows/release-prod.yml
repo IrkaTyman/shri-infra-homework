@@ -8,35 +8,25 @@ on:
         description: "Version to release"
 
 jobs:
-  check_docker:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Yandex Cloud CR "Login" Action for GitHub Actions
-        uses: yc-actions/yc-cr-login@v2
-        with:
-          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-      - run: |
-          ssh -tt irkatyman-sa@158.160.128.234 
-          docker inspect --type=image cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_latest
-
   run_docker:
-    needs: [check_docker]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: release/${{github.run_number}}
-
       - name: Yandex Cloud CR "Login" Action for GitHub Actions
         uses: yc-actions/yc-cr-login@v2
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
 
-      - name: Run
-        run: |
-          ssh irkatyman@158.160.128.234
-          docker pull cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_latest
-          docker run cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_latest
+      - name: Deploy COI VM
+        id: deploy-coi
+        uses: yc-actions/yc-coi-deploy@v2
+        env:
+          CR_REGISTRY: ${{secrets.YC_REGISTRY_ID}}
+          CR_REPOSITORY: crp2i96436f2665d759c/app
+          IMAGE_TAG: cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_latest
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+          folder-id: b1glfd63reoaohe1mnsd
+          vm-name: irkatyman
 
   add_issue_comment:
     needs: [run_docker]
