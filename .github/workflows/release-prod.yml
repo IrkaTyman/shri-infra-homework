@@ -15,7 +15,9 @@ jobs:
         uses: yc-actions/yc-cr-login@v2
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-      - run: docker inspect --type=image cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_latest
+      - run: |
+          ssh irkatyman@158.160.128.234 
+          docker inspect --type=image cr.yandex/${{secrets.YC_REGISTRY_ID}}/app:${{ inputs.version }}_latest
 
   run_docker:
     needs: [check_docker]
