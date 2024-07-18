@@ -74,9 +74,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Put current date into a variable
-        run: |
-          $NOW=& Get-Date -format yyyy-MM-dd
-          echo "NOW=$NOW" >> $env:GITHUB_ENV
+        run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
 
       - name: Append Issue Body
         uses: julien-deramond/update-issue-body@v1
